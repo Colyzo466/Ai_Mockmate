@@ -40,6 +40,7 @@ yarn-error.log*
 # Firebase service account keys
 firebase-adminsdk-*.json
 *.key.json
+fir.json # Added to ignore the sensitive file
 
 # vercel
 .vercel
