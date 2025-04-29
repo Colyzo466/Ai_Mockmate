@@ -1,27 +1,28 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { Button } from "@/components/ui/button"
-import { Form} from "@/components/ui/form"
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import Image from "next/image";
 import Link from "next/link";
-import {toast} from "sonner";
+import { toast } from "sonner";
 import FormField from "@/components/FormField";
-import {useRouter} from "next/navigation";
-import {createUserWithEmailAndPassword, signInWithEmailAndPassword} from "@firebase/auth";
-import {auth} from "@/firebase/client";
-import {signIn, signUp} from "@/lib/actions/auth.action";
+import { useRouter } from "next/navigation";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/firebase/client";
+import { signIn, signUp } from "@/lib/actions/auth.action";
+import { useEffect } from "react"; // <--- Add this
 
 const authFormSchema = (type: FormType) => {
     return z.object({
         name: type === 'sign-up' ? z.string().min(3) : z.string().optional(),
         email: z.string().email(),
         password: z.string().min(3),
-    })
-}
+    });
+};
 
 const AuthForm = ({ type }: { type: FormType }) => {
     const router = useRouter();
@@ -34,51 +35,69 @@ const AuthForm = ({ type }: { type: FormType }) => {
             email: "",
             password: "",
         },
-    })
+    });
+
+    // Reset form when `type` changes (SignIn <-> SignUp)
+    useEffect(() => {
+        form.reset();
+    }, [type]); // <--- Very important
+
+    // Your onSubmit stays the same...
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            if(type === 'sign-up') {
+            if (type === 'sign-up') {
                 const { name, email, password } = values;
-
+    
                 const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
-
+    
                 const result = await signUp({
                     uid: userCredentials.user.uid,
                     name: name!,
                     email,
-                    password,
-                })
-
-                if(!result?.success) {
+                    password, // Include the password field
+                });
+    
+                if (!result?.success) {
                     toast.error(result?.message);
                     return;
                 }
-
+    
                 toast.success('Account created successfully. Please sign in.');
-                router.push('/sign-in')
+                router.push('/sign-in');
             } else {
                 const { email, password } = values;
-
+    
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
+    
                 const idToken = await userCredential.user.getIdToken();
-
-                if(!idToken) {
-                    toast.error('Sign in failed')
+    
+                if (!idToken) {
+                    toast.error('Sign in failed');
                     return;
                 }
-
-                await signIn({
-                    email, idToken
-                })
-
-                toast.success('Sign in successfully.');
-                router.push('/')
+    
+                const result = await signIn({
+                    email,
+                    idToken,
+                });
+    
+                if (!result?.success) {
+                    toast.error(result?.message);
+    
+                    if (result?.redirectToSignUp) {
+                        router.push('/sign-up');
+                    }
+    
+                    return;
+                }
+    
+                toast.success('Signed in successfully.');
+                router.push('/');
             }
         } catch (error) {
             console.log(error);
-            toast.error(`There was an error: ${error}`)
+            toast.error(`There was an error: ${error}`);
         }
     }
 
@@ -93,11 +112,13 @@ const AuthForm = ({ type }: { type: FormType }) => {
                         alt="logo"
                         height={32}
                         width={38}
+                        priority
+                        style={{ width: 'auto', height: 'auto' }}
                     />
-                    <h2 className="text-primary-100">PrepWise</h2>
+                    <h2 className="text-primary-100">Mockmate</h2>
                 </div>
 
-                <h3>Practice job interview with AI</h3>
+                <h3>Enhance your interview skills with AI-driven practice sessions.</h3>
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 mt-4 form">
@@ -116,7 +137,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
                             placeholder="Your email address"
                             type="email"
                         />
-
                         <FormField
                             control={form.control}
                             name="password"
@@ -124,19 +144,21 @@ const AuthForm = ({ type }: { type: FormType }) => {
                             placeholder="Enter your password"
                             type="password"
                         />
-
-                        <Button className="btn" type="submit">{isSignIn ? 'Sign in' : 'Create an Account'}</Button>
+                        <Button className="btn" type="submit">
+                            {isSignIn ? 'Sign in' : 'Create an Account'}
+                        </Button>
                     </form>
                 </Form>
-                
+
                 <p className="text-center">
                     {isSignIn ? 'No account yet?' : 'Have an account already?'}
                     <Link href={!isSignIn ? '/sign-in' : '/sign-up'} className="font-bold text-user-primary ml-1">
-                        {!isSignIn ? "Sign in" : 'Sign up'}
+                        {!isSignIn ? "Sign in" : "Sign up"}
                     </Link>
                 </p>
             </div>
         </div>
-    )
-}
-export default AuthForm
+    );
+};
+
+export default AuthForm;
