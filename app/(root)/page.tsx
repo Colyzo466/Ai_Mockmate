@@ -2,9 +2,9 @@ import React from 'react'
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import {dummyInterviews} from "@/constants";
 import InterviewCard from "@/components/InterviewCard";
-import {getCurrentUser, getInterviewsByUserId, getLatestInterviews} from "@/lib/actions/auth.action";
+import {getCurrentUser, } from "@/lib/actions/auth.action";
+import {getInterviewsByUserId, getLatestInterviews } from "@/lib/actions/general.action";
 
 const Page = async () => {
     const user = await getCurrentUser();
@@ -21,7 +21,7 @@ const Page = async () => {
         <>
             <section className="card-cta">
                 <div className="flex flex-col gap-6 max-w-lg">
-                    <h2>Enhance Your Interview Skills with AI-Driven Practice and Insights</h2>
+                 <h2>Enhance Your Interview Skills with AI-Driven Practice and Insights</h2>
                     <p className="text-lg">
                         Practice with real-world interview questions and receive immediate, actionable feedback.
                     </p>
