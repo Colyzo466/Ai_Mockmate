@@ -20,15 +20,13 @@ const Page = async ({ params }: RouteParams) => {
     const feedback = await getFeedbackByInterviewId({
         interviewId: id,
         userId: user?.id!,
-    })
-
-    console.log(feedback);
+    });
 
     return (
         <section className="section-feedback">
             <div className="flex flex-row justify-center">
                 <h1 className="text-4xl font-semibold">
-                    Feedback on the Interview -{" "}
+                Interview Feedback Summary -{" "}
                     <span className="capitalize">{interview.role}</span> Interview
                 </h1>
             </div>
