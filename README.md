@@ -1,4 +1,4 @@
-# Prepwise — Your AI-Powered Job Interview Coach
+# Mockmate — Your AI-Powered Job Interview Coach
 
 <div align="center">
   <img src="https://img.shields.io/badge/-Next.JS-black?style=for-the-badge&logoColor=white&logo=nextdotjs&color=black" alt="Next.js" />
@@ -11,7 +11,7 @@
 
 ## 🚀 About Prepwise
 
-**Prepwise** is an AI-driven platform designed to empower job seekers by simulating realistic interview scenarios using cutting-edge voice AI technology. By leveraging Vapi AI voice agents and Google Gemini’s intelligent question generation, Prepwise helps candidates refine their communication skills, sharpen technical knowledge, and build confidence — all from the comfort of their own devices.
+**Mockmate** is an AI-driven platform designed to empower job seekers by simulating realistic interview scenarios using cutting-edge voice AI technology. By leveraging Vapi AI voice agents and Google Gemini’s intelligent question generation, Prepwise helps candidates refine their communication skills, sharpen technical knowledge, and build confidence — all from the comfort of their own devices.
 
 Whether you're just starting your career or aiming for a senior position, Prepwise is your smart companion for interview success.
 
@@ -160,4 +160,4 @@ For questions, feedback, or collaboration opportunities, please reach out:
 
 ---
 
-**Prepwise** — Empowering you to ace your next interview with confidence.
+**Mockmate** — Empowering you to ace your next interview with confidence.
